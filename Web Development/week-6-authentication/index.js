@@ -88,25 +88,48 @@ app.post("/signup", (req, res) => {
   });
 });
 
-app.post("signin", (req, res) => {
+// app.post("signin", (req, res) => {
+//   const username = req.body.username;
+//   const password = req.body.password;
+
+//   let foundUser = null;
+
+//   for (let i = 0; i < users.length; i++) {
+//     if (users[i].username == username && users[i].password == password) {
+//       foundUser = users[i];
+//     }
+//   }
+
+//   if (foundUser) {
+//     const token = generateToken();
+//     users.token = token;
+//     res.send({
+//       token: token,
+//     });
+//   } else {
+//     res.status(403).send({
+//       message: "Invalid username or password",
+//     });
+//   }
+// });
+app.post("/signin", function (req, res) {
   const username = req.body.username;
   const password = req.body.password;
 
-  //   let foundUser = null;
+  // maps and filter
+  let foundUser = null;
 
-  //   for (let i = 0; i < users.length; i++) {
-  //     if (users.username == username && users.password == password) {
-  //       foundUser = users[i];
-  //     }
-  //   }
-  const user = users.find(
-    (user) => user.username === username && user.password === password
-  );
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].username == username && users[i].password == password) {
+      foundUser = users[i];
+    }
+  }
 
-  if (user) {
+  if (foundUser) {
     const token = generateToken();
-    users.token = token;
-    res.send({
+
+    // foundUser.token = token;
+    res.json({
       token: token,
     });
   } else {
@@ -114,6 +137,6 @@ app.post("signin", (req, res) => {
       message: "Invalid username or password",
     });
   }
+  console.log(users);
 });
-
 app.listen(3000);
