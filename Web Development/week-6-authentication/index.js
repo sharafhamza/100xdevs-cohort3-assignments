@@ -1,37 +1,43 @@
 const express = require("express");
-
 const app = express();
-var jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = "Hellohamza";
 app.use(express.json());
-
 const users = [];
-const JWT_SECRET = "USER_APP";
-
 app.post("/signup", (req, res) => {
   const username = req.body.username;
+  const email = req.body.email;
   const password = req.body.password;
+
   users.push({
-    username: username,
-    password: password,
+    username,
+    email,
+    password,
   });
   res.send({
-    message: "You have signed up",
+    message: "You have Signed Up",
   });
+  console.log(users);
 });
 
 app.post("/signin", (req, res) => {
+  const email = req.body.email;
   const username = req.body.username;
   const password = req.body.password;
 
-  // maps and filter
-  const user = users.find(
-    (user) => user.username === username && user.password === password
-  );
+  let findUser = null;
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].username === username && users[i].password === password) {
+      findUser = users[i];
+    }
+  }
+  console.log(findUser);
 
-  if (user) {
+  if (findUser) {
     const token = jwt.sign(
       {
-        username: user.username,
+        username: users.username,
+        password: username.password,
       },
       JWT_SECRET
     );
@@ -39,36 +45,10 @@ app.post("/signin", (req, res) => {
       token: token,
     });
   } else {
-    res.status(403).send({
-      message: "Invalid username or password",
-    });
-  }
-  console.log(users);
-});
-
-app.get("/me", (req, res) => {
-  const token = req.headers.token;
-  const decodedInformation = jwt.verify(token, JWT_SECRET);
-
-  const username = decodedInformation.username;
-  let foundUser = null;
-
-  for (let i = 0; i < users.length; i++) {
-    if (users[i].username == username) {
-      foundUser = users[i];
-    }
-  }
-
-  if (foundUser) {
-    res.json({
-      username: foundUser.username,
-      password: foundUser.password,
-    });
-  } else {
-    res.json({
-      message: "token invalid",
+    res.send({
+      message: "User isn't found",
     });
   }
 });
 
-app.listen(3000);
+app.listen(4000);
