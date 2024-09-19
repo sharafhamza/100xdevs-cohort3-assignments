@@ -4,6 +4,21 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET = "Hellohamza";
 app.use(express.json());
 const users = [];
+
+const auth = (req, res, next) => {
+  const token = req.headers.token;
+  const decodedData = jwt.verify(token, JWT_SECRET);
+
+  if (decodedData.username) {
+    req.username = decodedData.username;
+    next();
+  } else {
+    res.json({
+      message: "You are not logged in",
+    });
+  }
+};
+
 app.post("/signup", (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
@@ -21,7 +36,6 @@ app.post("/signup", (req, res) => {
 });
 
 app.post("/signin", (req, res) => {
-  const email = req.body.email;
   const username = req.body.username;
   const password = req.body.password;
 
@@ -50,5 +64,13 @@ app.post("/signin", (req, res) => {
     });
   }
 });
+
+app.get("/me", function(req, res)) {
+  const token = req.headers.token // jwt
+  const decodedInformation = jwt.verify(token, JWT_SECRET);  // {username: "harkirat@gmail.com"}
+  const unAuthDecodedinfo = jwt.decode(token,);  // {username: "harkirat@gmail.com"}
+  const username = decodedInformation.username
+  let foundUser = null;
+}
 
 app.listen(4000);
