@@ -65,12 +65,12 @@ app.post("/signin", (req, res) => {
   }
 });
 
-app.get("/me", function(req, res)) {
-  const token = req.headers.token // jwt
-  const decodedInformation = jwt.verify(token, JWT_SECRET);  // {username: "harkirat@gmail.com"}
-  const unAuthDecodedinfo = jwt.decode(token,);  // {username: "harkirat@gmail.com"}
-  const username = decodedInformation.username
+app.get("/me", function (req, res) {
+  const token = req.headers.token; // jwt
+  const decodedInformation = jwt.verify(token, JWT_SECRET); // {username: "harkirat@gmail.com"}
+  const unAuthDecodedinfo = jwt.decode(token); // {username: "harkirat@gmail.com"}
+  const username = decodedInformation.username;
   let foundUser = null;
-}
+});
 
 app.listen(4000);
